@@ -1,0 +1,2814 @@
+{
+  "info": {
+    "name": "AutoAndes - Backend examen A",
+    "description": "Ejecutar en orden contra el esquema local con la semilla del examen. Crea registros de prueba, elimina el servicio y vehículo temporales y deja una orden ANULADA como evidencia. Los ejemplos de respuesta se obtienen en la validación local.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "passwordPrueba",
+      "value": "Auto2026*",
+      "type": "string"
+    },
+    {
+      "key": "tokenAdmin",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tokenAsesor",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tokenJefe",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "servicioId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "vehiculoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ordenId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "hoy",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.collectionVariables.set(\"hoy\", new Date().toLocaleDateString(\"sv-SE\", {timeZone: \"America/Lima\"}));"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "200 Login admin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.collectionVariables.set(\"tokenAdmin\", pm.response.json().token);"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Login admin",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"token\": \"<JWT generado al ejecutar login>\",\n  \"tipo\": \"Bearer\",\n  \"expiraEnSegundos\": 3600,\n  \"nombreCompleto\": \"Administrador AutoAndes\",\n  \"roles\": [\n    \"ADMIN\"\n  ],\n  \"permisos\": [\n    \"ORDEN_ANULAR\",\n    \"ORDEN_LEER\",\n    \"ORDEN_REGISTRAR\",\n    \"REPORTE_VER\",\n    \"SERVICIO_ESCRIBIR\",\n    \"SERVICIO_LEER\",\n    \"VEHICULO_ESCRIBIR\",\n    \"VEHICULO_LEER\"\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Login asesor",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"asesor\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.collectionVariables.set(\"tokenAsesor\", pm.response.json().token);"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Login asesor",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"asesor\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"token\": \"<JWT generado al ejecutar login>\",\n  \"tipo\": \"Bearer\",\n  \"expiraEnSegundos\": 3600,\n  \"nombreCompleto\": \"Asesor AutoAndes\",\n  \"roles\": [\n    \"ASESOR\"\n  ],\n  \"permisos\": [\n    \"ORDEN_LEER\",\n    \"ORDEN_REGISTRAR\",\n    \"SERVICIO_LEER\",\n    \"VEHICULO_ESCRIBIR\",\n    \"VEHICULO_LEER\"\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Login jefe",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"jefe\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.collectionVariables.set(\"tokenJefe\", pm.response.json().token);"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Login jefe",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"jefe\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"token\": \"<JWT generado al ejecutar login>\",\n  \"tipo\": \"Bearer\",\n  \"expiraEnSegundos\": 3600,\n  \"nombreCompleto\": \"Jefe de taller AutoAndes\",\n  \"roles\": [\n    \"JEFE_TALLER\"\n  ],\n  \"permisos\": [\n    \"ORDEN_ANULAR\",\n    \"ORDEN_LEER\",\n    \"REPORTE_VER\",\n    \"SERVICIO_ESCRIBIR\",\n    \"SERVICIO_LEER\",\n    \"VEHICULO_LEER\"\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Usuario actual",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/me",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Usuario actual",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/me",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 1,\n  \"username\": \"admin\",\n  \"nombreCompleto\": \"Administrador AutoAndes\",\n  \"roles\": [\n    \"ADMIN\"\n  ],\n  \"permisos\": [\n    \"ORDEN_ANULAR\",\n    \"ORDEN_LEER\",\n    \"ORDEN_REGISTRAR\",\n    \"REPORTE_VER\",\n    \"SERVICIO_ESCRIBIR\",\n    \"SERVICIO_LEER\",\n    \"VEHICULO_ESCRIBIR\",\n    \"VEHICULO_LEER\"\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Clientes",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/clientes",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Clientes",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/clientes",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"id\": 1,\n    \"documento\": \"10000001\",\n    \"nombres\": \"Ana Torres\",\n    \"telefono\": \"900000001\"\n  },\n  {\n    \"id\": 2,\n    \"documento\": \"10000002\",\n    \"nombres\": \"Luis Quispe\",\n    \"telefono\": \"900000002\"\n  },\n  {\n    \"id\": 3,\n    \"documento\": \"10000003\",\n    \"nombres\": \"María Flores\",\n    \"telefono\": \"900000003\"\n  },\n  {\n    \"id\": 4,\n    \"documento\": \"10000004\",\n    \"nombres\": \"Pedro Ramos\",\n    \"telefono\": \"900000004\"\n  },\n  {\n    \"id\": 5,\n    \"documento\": \"10000005\",\n    \"nombres\": \"Rosa Mendoza\",\n    \"telefono\": \"900000005\"\n  },\n  {\n    \"id\": 6,\n    \"documento\": \"20100000006\",\n    \"nombres\": \"Transportes Andinos\",\n    \"telefono\": \"900000006\"\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "200 Servicios",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/servicios",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Servicios",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"id\": 1,\n    \"codigo\": \"SRV-001\",\n    \"nombre\": \"Cambio de aceite\",\n    \"precio\": 120,\n    \"duracionMin\": 30,\n    \"activo\": true\n  },\n  {\n    \"id\": 2,\n    \"codigo\": \"SRV-002\",\n    \"nombre\": \"Alineamiento\",\n    \"precio\": 80,\n    \"duracionMin\": 45,\n    \"activo\": true\n  },\n  {\n    \"id\": 3,\n    \"codigo\": \"SRV-003\",\n    \"nombre\": \"Afinamiento\",\n    \"precio\": 250,\n    \"duracionMin\": 120,\n    \"activo\": true\n  },\n  {\n    \"id\": 4,\n    \"codigo\": \"SRV-004\",\n    \"nombre\": \"Revisión de frenos\",\n    \"precio\": 150,\n    \"duracionMin\": 60,\n    \"activo\": true\n  },\n  {\n    \"id\": 5,\n    \"codigo\": \"SRV-005\",\n    \"nombre\": \"Balanceo\",\n    \"precio\": 60,\n    \"duracionMin\": 30,\n    \"activo\": true\n  },\n  {\n    \"id\": 6,\n    \"codigo\": \"SRV-006\",\n    \"nombre\": \"Diagnóstico electrónico\",\n    \"precio\": 100,\n    \"duracionMin\": 45,\n    \"activo\": true\n  },\n  {\n    \"id\": 7,\n    \"codigo\": \"SRV-007\",\n    \"nombre\": \"Cambio de filtros\",\n    \"precio\": 90,\n    \"duracionMin\": 30,\n    \"activo\": true\n  },\n  {\n    \"id\": 8,\n    \"codigo\": \"SRV-008\",\n    \"nombre\": \"Lavado de motor\",\n    \"precio\": 70,\n    \"duracionMin\": 60,\n    \"activo\": false\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "201 Crear servicio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/servicios",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigo\": \"SRV-991\",\n  \"nombre\": \"Inspección de prueba\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "if (pm.response.code === 201) pm.collectionVariables.set(\"servicioId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "201 Crear servicio",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"SRV-991\",\n  \"nombre\": \"Inspección de prueba\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 10,\n  \"codigo\": \"SRV-991\",\n  \"nombre\": \"Inspección de prueba\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}"
+        }
+      ]
+    },
+    {
+      "name": "409 Código duplicado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/servicios",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigo\": \"SRV-991\",\n  \"nombre\": \"Inspección de prueba\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "409 Código duplicado",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"SRV-991\",\n  \"nombre\": \"Inspección de prueba\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.275907\",\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"mensaje\": \"Ya existe un servicio con el código SRV-991\",\n  \"ruta\": \"/api/v1/servicios\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Editar servicio",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/servicios/{{servicioId}}",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigo\": \"SRV-991\",\n  \"nombre\": \"Inspección actualizada\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Editar servicio",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios/{{servicioId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"SRV-991\",\n  \"nombre\": \"Inspección actualizada\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 10,\n  \"codigo\": \"SRV-991\",\n  \"nombre\": \"Inspección actualizada\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Desactivar servicio",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/servicios/{{servicioId}}/estado",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"activo\": false\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Desactivar servicio",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios/{{servicioId}}/estado",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 10,\n  \"codigo\": \"SRV-991\",\n  \"nombre\": \"Inspección actualizada\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": false\n}"
+        }
+      ]
+    },
+    {
+      "name": "204 Eliminar servicio sin órdenes",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/servicios/{{servicioId}}",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "204 Eliminar servicio sin órdenes",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios/{{servicioId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 204,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": ""
+            }
+          ],
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "409 Servicio usado no se elimina",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/servicios/1",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "409 Servicio usado no se elimina",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios/1",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.4761785\",\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"mensaje\": \"El servicio tiene órdenes asociadas. Use PATCH /api/v1/servicios/1/estado para darlo de baja\",\n  \"ruta\": \"/api/v1/servicios/1\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "400 Servicio inválido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/servicios",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigo\": \"INVALIDO\",\n  \"nombre\": \"Inspección de prueba\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });",
+              "pm.test(\"Error del campo\", () => pm.expect(pm.response.json().campos).to.have.property(\"codigo\"));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "400 Servicio inválido",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"INVALIDO\",\n  \"nombre\": \"Inspección de prueba\",\n  \"precio\": 100,\n  \"duracionMin\": 60,\n  \"activo\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.5054143\",\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"mensaje\": \"Datos inválidos\",\n  \"ruta\": \"/api/v1/servicios\",\n  \"campos\": {\n    \"codigo\": \"El código debe tener el formato SRV-000\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Vehículos por cliente",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehiculos?clienteId=1",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Vehículos por cliente",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/vehiculos?clienteId=1",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"id\": 1,\n    \"placa\": \"AAA-111\",\n    \"marca\": \"Toyota\",\n    \"modelo\": \"Corolla\",\n    \"anio\": 2020,\n    \"clienteId\": 1,\n    \"clienteNombre\": \"Ana Torres\"\n  },\n  {\n    \"id\": 2,\n    \"placa\": \"BBB-222\",\n    \"marca\": \"Kia\",\n    \"modelo\": \"Rio\",\n    \"anio\": 2021,\n    \"clienteId\": 1,\n    \"clienteNombre\": \"Ana Torres\"\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "201 Crear vehículo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehiculos",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"TST-991\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Yaris\",\n  \"anio\": 2020,\n  \"clienteId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "if (pm.response.code === 201) pm.collectionVariables.set(\"vehiculoId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "201 Crear vehículo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/vehiculos",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"TST-991\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Yaris\",\n  \"anio\": 2020,\n  \"clienteId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 10,\n  \"placa\": \"TST-991\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Yaris\",\n  \"anio\": 2020,\n  \"clienteId\": 1,\n  \"clienteNombre\": \"Ana Torres\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "409 Placa duplicada",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehiculos",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"TST-991\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Yaris\",\n  \"anio\": 2020,\n  \"clienteId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "409 Placa duplicada",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/vehiculos",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"TST-991\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Yaris\",\n  \"anio\": 2020,\n  \"clienteId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.6391735\",\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"mensaje\": \"Ya existe un vehículo con la placa TST-991\",\n  \"ruta\": \"/api/v1/vehiculos\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Editar vehículo",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehiculos/{{vehiculoId}}",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"TST-991\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Corolla\",\n  \"anio\": 2020,\n  \"clienteId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Editar vehículo",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/vehiculos/{{vehiculoId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"TST-991\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Corolla\",\n  \"anio\": 2020,\n  \"clienteId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 10,\n  \"placa\": \"TST-991\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Corolla\",\n  \"anio\": 2020,\n  \"clienteId\": 1,\n  \"clienteNombre\": \"Ana Torres\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "204 Eliminar vehículo sin órdenes",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehiculos/{{vehiculoId}}",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "204 Eliminar vehículo sin órdenes",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/vehiculos/{{vehiculoId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 204,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": ""
+            }
+          ],
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "409 Vehículo con órdenes",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehiculos/1",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "409 Vehículo con órdenes",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/vehiculos/1",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.7476152\",\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"mensaje\": \"El vehículo tiene órdenes registradas y no puede eliminarse\",\n  \"ruta\": \"/api/v1/vehiculos/1\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "400 Placa inválida",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehiculos",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"INVALIDA\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Yaris\",\n  \"anio\": 2020,\n  \"clienteId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "400 Placa inválida",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/vehiculos",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"INVALIDA\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Yaris\",\n  \"anio\": 2020,\n  \"clienteId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.7573187\",\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"mensaje\": \"Datos inválidos\",\n  \"ruta\": \"/api/v1/vehiculos\",\n  \"campos\": {\n    \"placa\": \"La placa debe tener el formato ABC-123\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "404 Recurso inexistente",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehiculos/999999",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "404 Recurso inexistente",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/vehiculos/999999",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.792961\",\n  \"status\": 404,\n  \"error\": \"Not Found\",\n  \"mensaje\": \"Vehículo no encontrado: 999999\",\n  \"ruta\": \"/api/v1/vehiculos/999999\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "401 Sin token",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/clientes",
+        "auth": {
+          "type": "noauth"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "401 Sin token",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/clientes",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "status": "",
+          "code": 401,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.8159376\",\n  \"status\": 401,\n  \"error\": \"Unauthorized\",\n  \"mensaje\": \"Autenticación requerida o token inválido\",\n  \"ruta\": \"/api/v1/clientes\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "401 Login inactivo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"inactivo\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "401 Login inactivo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"inactivo\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 401,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.9035002\",\n  \"status\": 401,\n  \"error\": \"Unauthorized\",\n  \"mensaje\": \"Usuario o contraseña incorrectos\",\n  \"ruta\": \"/api/v1/auth/login\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "403 Asesor sin reporte",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/reportes/ingresos-por-servicio",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "403 Asesor sin reporte",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reportes/ingresos-por-servicio",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 403,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.9281272\",\n  \"status\": 403,\n  \"error\": \"Forbidden\",\n  \"mensaje\": \"No tiene permisos para realizar esta operación\",\n  \"ruta\": \"/api/v1/reportes/ingresos-por-servicio\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "403 Jefe no registra órdenes",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenJefe}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 46000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 2,\n      \"cantidad\": 1\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "403 Jefe no registra órdenes",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenJefe}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 46000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 2,\n      \"cantidad\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 403,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:18.9590044\",\n  \"status\": 403,\n  \"error\": \"Forbidden\",\n  \"mensaje\": \"No tiene permisos para realizar esta operación\",\n  \"ruta\": \"/api/v1/ordenes\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "409 Tercer detalle inactivo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 46000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 2,\n      \"cantidad\": 1\n    },\n    {\n      \"servicioId\": 8,\n      \"cantidad\": 1\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "409 Tercer detalle inactivo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 46000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 2,\n      \"cantidad\": 1\n    },\n    {\n      \"servicioId\": 8,\n      \"cantidad\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:19.0560918\",\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"mensaje\": \"El servicio SRV-008 está inactivo\",\n  \"ruta\": \"/api/v1/ordenes\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "400 Servicio repetido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 46000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "400 Servicio repetido",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 46000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:19.0866076\",\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"mensaje\": \"No se puede repetir el mismo servicio en la orden\",\n  \"ruta\": \"/api/v1/ordenes\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "409 Kilometraje menor",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 44000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 2,\n      \"cantidad\": 1\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "409 Kilometraje menor",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 44000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 2,\n      \"cantidad\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:19.1364109\",\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"mensaje\": \"El kilometraje no puede ser menor al último registrado: 45000\",\n  \"ruta\": \"/api/v1/ordenes\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "201 Orden con total calculado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 46000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 2,\n      \"cantidad\": 1\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "if (pm.response.code === 201) pm.collectionVariables.set(\"ordenId\", pm.response.json().id);",
+              "pm.test(\"Total calculado\", () => pm.expect(pm.response.json().total).to.equal(320));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "201 Orden con total calculado",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehiculoId\": 1,\n  \"kilometraje\": 46000,\n  \"detalles\": [\n    {\n      \"servicioId\": 1,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 2,\n      \"cantidad\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 6,\n  \"numero\": \"OS-000006\",\n  \"fecha\": \"2026-10-29T09:34:19.1657962\",\n  \"vehiculoId\": 1,\n  \"placa\": \"AAA-111\",\n  \"clienteNombre\": \"Ana Torres\",\n  \"kilometraje\": 46000,\n  \"estado\": \"REGISTRADA\",\n  \"total\": 320,\n  \"usuarioRegistro\": \"asesor\",\n  \"motivoAnulacion\": null,\n  \"detalles\": [\n    {\n      \"id\": 8,\n      \"servicioId\": 1,\n      \"codigo\": \"SRV-001\",\n      \"servicio\": \"Cambio de aceite\",\n      \"cantidad\": 2,\n      \"precioUnitario\": 120,\n      \"subtotal\": 240\n    },\n    {\n      \"id\": 9,\n      \"servicioId\": 2,\n      \"codigo\": \"SRV-002\",\n      \"servicio\": \"Alineamiento\",\n      \"cantidad\": 1,\n      \"precioUnitario\": 80,\n      \"subtotal\": 80\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Detalle de orden",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes/{{ordenId}}",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Detalle de orden",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes/{{ordenId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 6,\n  \"numero\": \"OS-000006\",\n  \"fecha\": \"2026-10-29T09:34:19.165796\",\n  \"vehiculoId\": 1,\n  \"placa\": \"AAA-111\",\n  \"clienteNombre\": \"Ana Torres\",\n  \"kilometraje\": 46000,\n  \"estado\": \"REGISTRADA\",\n  \"total\": 320,\n  \"usuarioRegistro\": \"asesor\",\n  \"motivoAnulacion\": null,\n  \"detalles\": [\n    {\n      \"id\": 8,\n      \"servicioId\": 1,\n      \"codigo\": \"SRV-001\",\n      \"servicio\": \"Cambio de aceite\",\n      \"cantidad\": 2,\n      \"precioUnitario\": 120,\n      \"subtotal\": 240\n    },\n    {\n      \"id\": 9,\n      \"servicioId\": 2,\n      \"codigo\": \"SRV-002\",\n      \"servicio\": \"Alineamiento\",\n      \"cantidad\": 1,\n      \"precioUnitario\": 80,\n      \"subtotal\": 80\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Filtros combinados",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes?placa=AAA-111&estado=REGISTRADA&desde={{hoy}}&hasta={{hoy}}",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAdmin}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Filtros combinados",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes?placa=AAA-111&estado=REGISTRADA&desde={{hoy}}&hasta={{hoy}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAdmin}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"id\": 6,\n    \"numero\": \"OS-000006\",\n    \"fecha\": \"2026-10-29T09:34:19.165796\",\n    \"vehiculoId\": 1,\n    \"placa\": \"AAA-111\",\n    \"clienteNombre\": \"Ana Torres\",\n    \"kilometraje\": 46000,\n    \"estado\": \"REGISTRADA\",\n    \"total\": 320,\n    \"usuarioRegistro\": \"asesor\",\n    \"motivoAnulacion\": null,\n    \"detalles\": [\n      {\n        \"id\": 8,\n        \"servicioId\": 1,\n        \"codigo\": \"SRV-001\",\n        \"servicio\": \"Cambio de aceite\",\n        \"cantidad\": 2,\n        \"precioUnitario\": 120,\n        \"subtotal\": 240\n      },\n      {\n        \"id\": 9,\n        \"servicioId\": 2,\n        \"codigo\": \"SRV-002\",\n        \"servicio\": \"Alineamiento\",\n        \"cantidad\": 1,\n        \"precioUnitario\": 80,\n        \"subtotal\": 80\n      }\n    ]\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "403 Asesor no anula",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes/{{ordenId}}/anular",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenAsesor}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"motivo\": \"Cliente canceló la atención\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "403 Asesor no anula",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes/{{ordenId}}/anular",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenAsesor}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo\": \"Cliente canceló la atención\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 403,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:19.3814135\",\n  \"status\": 403,\n  \"error\": \"Forbidden\",\n  \"mensaje\": \"No tiene permisos para realizar esta operación\",\n  \"ruta\": \"/api/v1/ordenes/6/anular\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Anular como jefe",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes/{{ordenId}}/anular",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenJefe}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"motivo\": \"Cliente canceló la atención\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Anular como jefe",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes/{{ordenId}}/anular",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenJefe}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo\": \"Cliente canceló la atención\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 6,\n  \"numero\": \"OS-000006\",\n  \"fecha\": \"2026-10-29T09:34:19.165796\",\n  \"vehiculoId\": 1,\n  \"placa\": \"AAA-111\",\n  \"clienteNombre\": \"Ana Torres\",\n  \"kilometraje\": 46000,\n  \"estado\": \"ANULADA\",\n  \"total\": 320,\n  \"usuarioRegistro\": \"asesor\",\n  \"motivoAnulacion\": \"Cliente canceló la atención\",\n  \"detalles\": [\n    {\n      \"id\": 8,\n      \"servicioId\": 1,\n      \"codigo\": \"SRV-001\",\n      \"servicio\": \"Cambio de aceite\",\n      \"cantidad\": 2,\n      \"precioUnitario\": 120,\n      \"subtotal\": 240\n    },\n    {\n      \"id\": 9,\n      \"servicioId\": 2,\n      \"codigo\": \"SRV-002\",\n      \"servicio\": \"Alineamiento\",\n      \"cantidad\": 1,\n      \"precioUnitario\": 80,\n      \"subtotal\": 80\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "409 No anular dos veces",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/ordenes/{{ordenId}}/anular",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenJefe}}"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"motivo\": \"Cliente canceló la atención\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+              "pm.test(\"Formato común\", () => { const e = pm.response.json(); [\"timestamp\", \"status\", \"error\", \"mensaje\", \"ruta\"].forEach(k => pm.expect(e).to.have.property(k)); });"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "409 No anular dos veces",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ordenes/{{ordenId}}/anular",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenJefe}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo\": \"Cliente canceló la atención\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-10-29T09:34:19.4863482\",\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"mensaje\": \"Solo se puede anular una orden REGISTRADA\",\n  \"ruta\": \"/api/v1/ordenes/6/anular\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "200 Reporte agregado",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/reportes/ingresos-por-servicio",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "type": "string",
+              "value": "{{tokenJefe}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 Reporte agregado",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reportes/ingresos-por-servicio",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "type": "string",
+                  "value": "{{tokenJefe}}"
+                }
+              ]
+            }
+          },
+          "status": "",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"codigo\": \"SRV-003\",\n    \"servicio\": \"Afinamiento\",\n    \"cantidadTotal\": 1,\n    \"importeTotal\": 250\n  },\n  {\n    \"codigo\": \"SRV-004\",\n    \"servicio\": \"Revisión de frenos\",\n    \"cantidadTotal\": 1,\n    \"importeTotal\": 150\n  },\n  {\n    \"codigo\": \"SRV-001\",\n    \"servicio\": \"Cambio de aceite\",\n    \"cantidadTotal\": 1,\n    \"importeTotal\": 120\n  },\n  {\n    \"codigo\": \"SRV-002\",\n    \"servicio\": \"Alineamiento\",\n    \"cantidadTotal\": 1,\n    \"importeTotal\": 80\n  }\n]"
+        }
+      ]
+    }
+  ]
+}
