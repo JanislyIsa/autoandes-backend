@@ -15,11 +15,11 @@ public class AutoAndesMapper {
     }
 
     public void actualizar(Servicio s, ServicioRequestDTO r) {
-        s.setCodigo(r.getCodigo());
-        s.setNombre(r.getNombre().trim());
-        s.setPrecio(r.getPrecio());
-        s.setDuracionMin(r.getDuracionMin());
-        s.setActivo(r.getActivo());
+        s.setCodigo(r.codigo());
+        s.setNombre(r.nombre().trim());
+        s.setPrecio(r.precio());
+        s.setDuracionMin(r.duracionMin());
+        s.setActivo(r.activo());
     }
 
     public VehiculoResponseDTO vehiculo(Vehiculo v) {

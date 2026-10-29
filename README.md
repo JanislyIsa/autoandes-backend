@@ -154,5 +154,5 @@ quedan incluidos para ejecutar la colección posteriormente en Postman.
 ## 7. Entrega pendiente
 
 El frontend, el PDF de capturas y la defensa se realizan después de validar este backend.
-El trabajo se guarda por bloques en `examen-a-suarez`; `main` y `develop` parten de la preparación inicial.
-La fusión, la etiqueta `v1.0-examen-u2` y la publicación se reservan para la entrega revisada.
+El backend se desarrolla por bloques en `examen-a-suarez` y se integra en `develop` y `main`
+para su publicación. La etiqueta `v1.0-examen-u2` se reserva para el commit de la entrega final.

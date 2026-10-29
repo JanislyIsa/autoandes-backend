@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upeu.autoandes.dto.*;
-import pe.edu.upeu.autoandes.entity.EstadoOrden;
+import pe.edu.upeu.autoandes.enums.EstadoOrden;
 import pe.edu.upeu.autoandes.service.OrdenService;
 
 @RestController

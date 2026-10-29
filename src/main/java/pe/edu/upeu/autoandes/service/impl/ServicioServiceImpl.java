@@ -35,8 +35,8 @@ public class ServicioServiceImpl implements ServicioService {
     @Override
     @Transactional
     public ServicioResponseDTO crear(ServicioRequestDTO r) {
-        if (servicios.existsByCodigo(r.getCodigo())) {
-            throw new ReglaNegocioException("Ya existe un servicio con el código " + r.getCodigo());
+        if (servicios.existsByCodigo(r.codigo())) {
+            throw new ReglaNegocioException("Ya existe un servicio con el código " + r.codigo());
         }
         Servicio servicio = new Servicio();
         mapper.actualizar(servicio, r);
@@ -49,8 +49,8 @@ public class ServicioServiceImpl implements ServicioService {
     @Transactional
     public ServicioResponseDTO actualizar(Long id, ServicioRequestDTO r) {
         Servicio servicio = obtener(id);
-        if (servicios.existsByCodigoAndIdNot(r.getCodigo(), id)) {
-            throw new ReglaNegocioException("Ya existe un servicio con el código " + r.getCodigo());
+        if (servicios.existsByCodigoAndIdNot(r.codigo(), id)) {
+            throw new ReglaNegocioException("Ya existe un servicio con el código " + r.codigo());
         }
         mapper.actualizar(servicio, r);
         servicios.flush();

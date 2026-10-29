@@ -3,7 +3,7 @@ package pe.edu.upeu.autoandes.service;
 import java.time.LocalDate;
 import java.util.List;
 import pe.edu.upeu.autoandes.dto.*;
-import pe.edu.upeu.autoandes.entity.EstadoOrden;
+import pe.edu.upeu.autoandes.enums.EstadoOrden;
 
 public interface OrdenService {
     OrdenResponseDTO registrar(OrdenRequestDTO request, String username);

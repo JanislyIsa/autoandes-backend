@@ -1,4 +1,4 @@
-package pe.edu.upeu.autoandes.entity;
+package pe.edu.upeu.autoandes.enums;
 
 public enum EstadoOrden {
     REGISTRADA,

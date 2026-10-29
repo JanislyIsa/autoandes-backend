@@ -6,7 +6,7 @@ import java.util.Optional;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.*;
 import pe.edu.upeu.autoandes.dto.IngresoPorServicioDTO;
-import pe.edu.upeu.autoandes.entity.EstadoOrden;
+import pe.edu.upeu.autoandes.enums.EstadoOrden;
 import pe.edu.upeu.autoandes.entity.OrdenServicio;
 
 public interface OrdenServicioRepository extends JpaRepository<OrdenServicio, Long> {
@@ -34,7 +34,7 @@ public interface OrdenServicioRepository extends JpaRepository<OrdenServicio, Lo
             select new pe.edu.upeu.autoandes.dto.IngresoPorServicioDTO(
                 s.codigo, s.nombre, sum(d.cantidad), sum(d.subtotal))
             from DetalleOrden d join d.servicio s join d.orden o
-            where o.estado = pe.edu.upeu.autoandes.entity.EstadoOrden.REGISTRADA
+            where o.estado = pe.edu.upeu.autoandes.enums.EstadoOrden.REGISTRADA
               and (:desde is null or o.fecha >= :desde)
               and (:hasta is null or o.fecha < :hasta)
             group by s.codigo, s.nombre

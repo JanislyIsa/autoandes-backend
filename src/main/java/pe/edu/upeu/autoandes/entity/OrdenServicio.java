@@ -3,6 +3,7 @@ package pe.edu.upeu.autoandes.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import pe.edu.upeu.autoandes.enums.EstadoOrden;
 
 @Entity
 @Table(name = "orden_servicio")
