@@ -14,4 +14,3 @@ public class    BooleanNumeroConverter implements AttributeConverter<Boolean, In
         return valor == null ? null : valor == 1;
     }
 }
-

@@ -98,7 +98,8 @@ class AutoAndesApiIntegrationTest {
         String request = "{\"placa\":\"TST-901\",\"marca\":\"Toyota\",\"modelo\":\"Yaris\",\"anio\":2020,\"clienteId\":1}";
         var creado = cuerpo(pedir("POST", "/api/v1/vehiculos", request, token), 201);
         long id = creado.get("id").asLong();
-        assertThat(creado.get("clienteNombre").asText()).isEqualTo("Ana Torres");
+        assertThat(creado.get("clienteNombre").asText()).isEqualTo(
+                jdbc.queryForObject("select nombres from cliente where id = 1", String.class));
         assertThat(creado.has("cliente")).isFalse();
         cuerpo(pedir("POST", "/api/v1/vehiculos", request, token), 409);
         cuerpo(pedir("GET", "/api/v1/vehiculos/999999", null, token), 404);
